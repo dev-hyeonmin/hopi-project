@@ -22,20 +22,32 @@ interface Customer {
   rank: string;
 }
 
+interface OptionType {
+  id: number;
+  name: string;
+}
+
+interface MedicalRecordType {
+  id: number;
+  procedureName: string;
+  isComplete: boolean;
+  bed?: OptionType;
+  doctor?: OptionType;
+  esthetician?: OptionType;
+  assistant?: OptionType;
+}
+
 export interface BookingType {
   id: number;
   bookingDate: string;
+  checkedInDate: string;
+  confirmedDate: string;
+  medicalRecords: MedicalRecordType[];
+  assiMemo: string;
   productNames: string[];
+  agreements: [{
+    shortName: string;
+    isAgree: boolean;
+  }];
   customer: Customer;
-}
-
-interface PaginationType {
-  currentPage: number;
-  totalCnt: number;
-  hasMore: boolean;
-}
-
-export interface GetBookingsResponse {
-  data: BookingType[];
-  pagination: PaginationType;
 }

@@ -830,6 +830,10 @@ video {
   padding-bottom: 0px;
 }
 
+.pb-4 {
+  padding-bottom: 1rem;
+}
+
 .align-middle {
   vertical-align: middle;
 }
@@ -852,6 +856,11 @@ video {
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
+}
+
+.text-base {
+  font-size: 1rem;
+  line-height: 1.5rem;
 }
 
 .font-bold {
@@ -894,6 +903,11 @@ video {
 .text-zinc-500 {
   --tw-text-opacity: 1;
   color: rgb(115 115 115 / var(--tw-text-opacity));
+}
+
+.text-zinc-300 {
+  --tw-text-opacity: 1;
+  color: rgb(212 212 212 / var(--tw-text-opacity));
 }
 
 .shadow-lg {

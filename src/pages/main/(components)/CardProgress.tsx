@@ -1,16 +1,16 @@
 import Box from '@components/layout/box/Box.tsx';
 import {GENDER, GENDER_KEY, NATION, NATION_KEY} from '@/constants.ts';
-import Search, {OptionProps} from '@components/form/Search.tsx';
-import {getStaffs} from '@/api/staffs';
 import {BookingType} from '@/api/bookings/type.ts';
 import {formatDate} from '@/utils/dateFormat.ts';
 import {calcAge} from '@/utils/calcAge.ts';
+import Search, {OptionProps} from '@components/form/Search.tsx';
+import {getStaffs} from '@/api/staffs';
 
-interface CardCompleteProps {
+interface CardProgressProps {
   booking: BookingType;
 }
 
-export default function CardComplete({booking}: CardCompleteProps) {
+export default function CardProgress({booking}: CardProgressProps) {
   const {data: getStaffsData} = getStaffs();
   const staffs = getStaffsData?.staff.map((staff) => ({
     id: staff.id,
@@ -20,6 +20,7 @@ export default function CardComplete({booking}: CardCompleteProps) {
   const handleChangeOption = ({id, value}: OptionProps) => {
     console.log(`Select id : ${id} / value : ${value}`);
   };
+
   return (
     <Box key={booking.id} className="w-full bg-white rounded-lg p-4 border border-zinc-200" direction="vertical">
       <Box className="gap-1.5" verticalAlign="middle">
@@ -31,8 +32,12 @@ export default function CardComplete({booking}: CardCompleteProps) {
         <span className="text-red font-bold">{formatDate(booking.bookingDate, 'HH:mm')}</span>
         <span className="font-medium">
           {GENDER[booking.customer.gender as GENDER_KEY]}
-          {'/'}{calcAge(booking.customer.birth)}
-          {'/'}{NATION[booking.customer.nation as NATION_KEY]}
+
+          {booking.customer.birth && '/'}
+          {calcAge(booking.customer.birth)}
+
+          {booking.customer.nation && '/'}
+          {NATION[booking.customer.nation as NATION_KEY]}
         </span>
       </Box>
 
@@ -40,38 +45,36 @@ export default function CardComplete({booking}: CardCompleteProps) {
         {booking.customer.phone || booking.customer.email}
       </Box>
 
+      <div className="w-full text-zinc-500 line-clamp-1">
+        {booking.productNames.join(', ') || '시술 정보 없음'}
+      </div>
+
       <Box className="text-zinc-400 text-xs">
-        결제 완료 {formatDate(booking.confirmedDate, 'YYYY-MM-DD HH:mm')}
+        접수 완료 {formatDate(booking.checkedInDate, 'YYYY-MM-DD HH:mm')}
       </Box>
 
-      <Box className="w-full gap-4 mt-4" direction="vertical">
-        {booking.medicalRecords.map((medical) => (
-          <Box key={medical.id} className="gap-1.5" direction="vertical">
-            <div className="font-medium text-sm">{medical.procedureName}</div>
-            
-            <Box className="gap-1.5">
-              <Search placeholder="bed" size="small" />
-              <Search
-                placeholder="doc"
-                size="small"
-                options={staffs}
-                handleChangeOption={handleChangeOption}
-              />
-              <Search
-                placeholder="assi"
-                size="small"
-                options={staffs}
-                handleChangeOption={handleChangeOption}
-              />
-              <Search
-                placeholder="skin"
-                size="small"
-                options={staffs}
-                handleChangeOption={handleChangeOption}
-              />
-            </Box>
-          </Box>
-        ))}
+      <Box direction="vertical" className="mt-4 gap-1.5">
+        <Box verticalAlign="middle" className="gap-1.5">
+          <div className="font-medium text-sm">위치</div>
+
+          <Search
+            placeholder="선택"
+            size="small"
+            options={staffs}
+            handleChangeOption={handleChangeOption}
+          />
+        </Box>
+
+        <Box verticalAlign="middle" className="gap-1.5">
+          <div className="font-medium text-sm">상담</div>
+
+          <Search
+            placeholder="선택"
+            size="small"
+            options={staffs}
+            handleChangeOption={handleChangeOption}
+          />
+        </Box>
       </Box>
     </Box>
   );

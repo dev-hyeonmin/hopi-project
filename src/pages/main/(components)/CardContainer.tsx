@@ -4,6 +4,7 @@ import {getBookingsComplete, getBookingsPending, getBookingsProgress} from '@/ap
 import React, {useEffect, useMemo, useRef} from 'react';
 import CardComplete from '@/pages/main/(components)/CardComplete.tsx';
 import CardPending from '@/pages/main/(components)/CardPending.tsx';
+import CardProgress from '@/pages/main/(components)/CardProgress.tsx';
 
 interface CardContainerProps extends CardListBoxProps {
   title: string;
@@ -32,7 +33,7 @@ const CardListVariableByType = (type: CardContainerProps['type']) => {
     case 'PROGRESS':
       return {
         getQuery: getBookingsProgress,
-        component: CardComplete
+        component: CardProgress
       };
     case 'COMPLETE':
       return {
@@ -94,7 +95,7 @@ function CardListBox({type, options}: CardListBoxProps) {
   return (
     <Box
       direction="vertical"
-      className="w-full h-full px-4 overflow-y-auto gap-4">
+      className="w-full h-full px-4 pb-4 overflow-y-auto gap-4">
       {bookings?.map((booking, index) => (
         <div key={booking.id} ref={bookings.length - 3 === index ? observeRef : null} className="w-full">
           {React.createElement(component, {booking})}

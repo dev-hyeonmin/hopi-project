@@ -1,10 +1,10 @@
 import Box from '@components/layout/box/Box.tsx';
 import CardContainer from '@/pages/main/(components)/CardContainer.tsx';
 import {GetBookingsParams} from '@/api/bookings/type.ts';
-import {formatDate} from '@/utils/dateFormat.ts';
 
 const INIT_BOOKING_PARMAS: GetBookingsParams = {
-  bookingDate: formatDate(new Date(), 'YYYY-MM-DD'),
+  //bookingDate: formatDate(new Date(), 'YYYY-MM-DD'),
+  bookingDate: '2024-08-10',
   perPage: 10
 };
 

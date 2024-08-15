@@ -4,13 +4,11 @@ import {BookingType} from '@/api/bookings/type.ts';
 import {formatDate} from '@/utils/dateFormat.ts';
 import {calcAge} from '@/utils/calcAge.ts';
 
-interface CompleteCardProps {
+interface CardPendingProps {
   booking: BookingType;
 }
 
-export default function CardPending({booking}: CompleteCardProps) {
-
-
+export default function CardPending({booking}: CardPendingProps) {
   return (
     <Box key={booking.id} className="w-full bg-white rounded-lg p-4 border border-zinc-200" direction="vertical">
       <Box className="gap-1.5" verticalAlign="middle">
@@ -22,8 +20,12 @@ export default function CardPending({booking}: CompleteCardProps) {
         <span className="text-red font-bold">{formatDate(booking.bookingDate, 'HH:mm')}</span>
         <span className="font-medium">
           {GENDER[booking.customer.gender as GENDER_KEY]}
-          {'/'}{calcAge(booking.customer.birth)}
-          {'/'}{NATION[booking.customer.nation as NATION_KEY]}
+
+          {booking.customer.birth && '/'}
+          {calcAge(booking.customer.birth)}
+
+          {booking.customer.nation && '/'}
+          {NATION[booking.customer.nation as NATION_KEY]}
         </span>
       </Box>
 
