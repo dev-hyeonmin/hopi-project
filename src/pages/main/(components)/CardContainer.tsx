@@ -1,8 +1,9 @@
 import Box from '@components/layout/box/Box.tsx';
 import {GetBookingsParams} from '@/api/bookings/type.ts';
 import {getBookingsComplete, getBookingsPending, getBookingsProgress} from '@/api/bookings';
-import {useEffect, useMemo, useRef} from 'react';
-import CompleteCard from '@/pages/main/(components)/CompleteCard.tsx';
+import React, {useEffect, useMemo, useRef} from 'react';
+import CardComplete from '@/pages/main/(components)/CardComplete.tsx';
+import CardPending from '@/pages/main/(components)/CardPending.tsx';
 
 interface CardContainerProps extends CardListBoxProps {
   title: string;
@@ -10,8 +11,8 @@ interface CardContainerProps extends CardListBoxProps {
 
 export default function CardContainer({title, ...props}: CardContainerProps) {
   return (
-    <Box direction="vertical" className="w-1/3 h-full rounded-xl bg-secondary">
-      <div>{title}</div>
+    <Box direction="vertical" className="w-1/3 h-full rounded-xl bg-purple-100 border border-zinc-200">
+      <div className="p-4 font-bold">{title}</div>
 
       <CardListBox {...props} />
     </Box>
@@ -21,14 +22,23 @@ export default function CardContainer({title, ...props}: CardContainerProps) {
 /**
  * CardListBox
  */
-const getQuery = (type: CardContainerProps['type']) => {
+const CardListVariableByType = (type: CardContainerProps['type']) => {
   switch (type) {
     case 'PENDING':
-      return getBookingsPending;
+      return {
+        getQuery: getBookingsPending,
+        component: CardPending
+      };
     case 'PROGRESS':
-      return getBookingsProgress;
+      return {
+        getQuery: getBookingsProgress,
+        component: CardComplete
+      };
     case 'COMPLETE':
-      return getBookingsComplete;
+      return {
+        getQuery: getBookingsComplete,
+        component: CardComplete
+      };
   }
 };
 
@@ -69,9 +79,10 @@ const useIntersectionObserver = ({fetchNextPage, isFetchingNextPage, hasNextPage
 
 
 function CardListBox({type, options}: CardListBoxProps) {
-  const {data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage} = getQuery(type)(options);
+  const {getQuery, component} = CardListVariableByType(type);
+  const {data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage} = getQuery(options);
   const observeRef = useIntersectionObserver({fetchNextPage, isFetchingNextPage, hasNextPage});
-  
+
   const bookings = useMemo(() => {
     return data?.pages.flatMap((page) => page.data);
   }, [data?.pageParams]);
@@ -83,10 +94,10 @@ function CardListBox({type, options}: CardListBoxProps) {
   return (
     <Box
       direction="vertical"
-      className="w-full h-full p-4 pb-0 overflow-y-auto">
+      className="w-full h-full px-4 overflow-y-auto gap-4">
       {bookings?.map((booking, index) => (
-        <div key={booking.id} ref={bookings.length - 3 === index ? observeRef : null}>
-          <CompleteCard booking={booking} />
+        <div key={booking.id} ref={bookings.length - 3 === index ? observeRef : null} className="w-full">
+          {React.createElement(component, {booking})}
         </div>
       ))}
     </Box>

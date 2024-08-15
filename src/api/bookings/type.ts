@@ -25,6 +25,7 @@ interface Customer {
 export interface BookingType {
   id: number;
   bookingDate: string;
+  productNames: string[];
   customer: Customer;
 }
 
@@ -33,6 +34,7 @@ interface PaginationType {
   totalCnt: number;
   hasMore: boolean;
 }
+
 export interface GetBookingsResponse {
   data: BookingType[];
   pagination: PaginationType;

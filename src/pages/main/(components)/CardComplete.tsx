@@ -4,14 +4,15 @@ import Search, {OptionProps} from '@components/form/Search.tsx';
 import {getStaffs} from '@/api/staffs';
 import {BookingType} from '@/api/bookings/type.ts';
 
-interface CompleteCardProps {
+interface CardCompleteProps {
   booking: BookingType;
 }
-export default function CompleteCard({booking}: CompleteCardProps) {
+
+export default function CardComplete({booking}: CardCompleteProps) {
   const {data: getStaffsData} = getStaffs();
   const staffs = getStaffsData?.staff.map((staff) => ({
     id: staff.id,
-    value: staff.name,
+    value: staff.name
   }));
 
   const handleChangeOption = ({id, value}: OptionProps) => {
